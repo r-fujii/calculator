@@ -237,10 +237,6 @@
                                     <action selector="calc_ans:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8iB-bj-CKo"/>
                                 </connections>
                             </button>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rsZ-s4-TXR">
-                                <rect key="frame" x="32" y="216" width="350" height="250"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </scrollView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KLq-Wx-4Q0">
                                 <rect key="frame" x="327" y="574" width="55" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -250,6 +246,47 @@
                                     <action selector="undo_formula:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ksi-q0-odk"/>
                                 </connections>
                             </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PdW-q1-ceT">
+                                <rect key="frame" x="20" y="196" width="374" height="280"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="history" rowHeight="60" id="Zwj-6F-8LE" customClass="TableViewButton" customModule="Calculator_demo" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="374" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Zwj-6F-8LE" id="KcA-fw-EUJ">
+                                            <rect key="frame" x="0.0" y="0.0" width="374" height="59.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Yd-Ee-nx3">
+                                                    <rect key="frame" x="0.0" y="0.0" width="374" height="60.5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="60" id="34t-xK-RDr"/>
+                                                        <constraint firstAttribute="width" constant="374" id="gfu-aQ-WSf"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button"/>
+                                                    <connections>
+                                                        <action selector="read_formula:" destination="BYZ-38-t0r" eventType="touchUpInside" id="OsW-eX-g5I"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="7Yd-Ee-nx3" secondAttribute="bottom" id="73X-lb-u97"/>
+                                                <constraint firstItem="7Yd-Ee-nx3" firstAttribute="top" secondItem="KcA-fw-EUJ" secondAttribute="top" id="H4O-LO-bAQ"/>
+                                                <constraint firstItem="7Yd-Ee-nx3" firstAttribute="leading" secondItem="KcA-fw-EUJ" secondAttribute="leading" id="Usp-4W-uB3"/>
+                                                <constraint firstAttribute="trailing" secondItem="7Yd-Ee-nx3" secondAttribute="trailing" id="wZe-Qo-aN4"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="hist_button" destination="7Yd-Ee-nx3" id="0SX-Bf-F9t"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="iF0-JA-glb"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="H1Z-91-lW9"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -257,6 +294,7 @@
                     <connections>
                         <outlet property="ans_label" destination="X36-FN-J93" id="8Pz-ZR-VXt"/>
                         <outlet property="formula_label" destination="FJW-Ja-vFc" id="r7F-pj-A2I"/>
+                        <outlet property="history_table" destination="PdW-q1-ceT" id="6Ec-Ai-jhI"/>
                         <outletCollection property="buttons" destination="4oH-an-2g3" collectionClass="NSMutableArray" id="noZ-qs-bDK"/>
                         <outletCollection property="buttons" destination="Yhf-Az-sxI" collectionClass="NSMutableArray" id="dGG-a7-vul"/>
                         <outletCollection property="buttons" destination="Fzy-ef-eFc" collectionClass="NSMutableArray" id="C0K-JV-Oqp"/>

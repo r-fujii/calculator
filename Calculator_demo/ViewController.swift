@@ -9,10 +9,18 @@
 import UIKit
 import Expression
 
-class ViewController: UIViewController {
+class TableViewButton: UITableViewCell {
+    @IBOutlet weak var hist_button: UIButton!
+}
+
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var formula_label: UILabel!
     @IBOutlet weak var ans_label: UILabel!
     @IBOutlet var buttons: [UIButton]!
+    @IBOutlet weak var history_table: UITableView!
+    
+    var userDefaults = UserDefaults.standard
+    var formula_history: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +30,21 @@ class ViewController: UIViewController {
         for button in buttons {
             button.layer.cornerRadius = 5.0
         }
+        
+        // formula_historyが存在している場合に読み込む
+        if UserDefaults.standard.object(forKey: "formula_history") != nil {
+            formula_history = UserDefaults.standard.array(forKey: "formula_history") as! [String]
+        }
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func update_hist(_ formula: String) {
+        formula_history.append(formula)
+        history_table.reloadData()
+        userDefaults.set(formula_history, forKey: "formula_history")
     }
 
     @IBAction func input_formula(_ sender: UIButton) {
@@ -66,12 +85,13 @@ class ViewController: UIViewController {
             return
         }
         let formula: String = format_formula(formula_text)
-        ans_label.text = eval_formula(formula)
-    }
-    
-    private func separate_comma(_ text: String) -> String {
-//        let nums: String = text.replacingOccurrences(of: "(?<=^|[÷×\\+\\-\\(])([0-9]+)(?=[÷×\\+\\-\\)]|$)", with: "$1.0", options: NSString.CompareOptions.regularExpression)
-        return ""
+        let ans = eval_formula(formula)
+        ans_label.text = ans
+        
+        // update history
+        if ans != "式を正しく入力してください" {
+            update_hist(formula_text)
+        }
     }
     
     private func format_formula(_ formula: String) -> String {
@@ -109,9 +129,13 @@ class ViewController: UIViewController {
     
     @IBAction func calc_tax(_ sender: UIButton) {
         
-        // senderにはボタンのインスタンスが入る
         // まずその段階での額を計算
-        calc_ans(sender)
+        guard let formula_text = formula_label.text else {
+            return
+        }
+        let formula: String = format_formula(formula_text)
+        ans_label.text = eval_formula(formula)
+        
         // 税込み税抜き処理ここから
         guard let ans_text: String = ans_label.text else {
             return
@@ -139,8 +163,37 @@ class ViewController: UIViewController {
             
             ans_label.text = eval_formula(formula, round: true)
             formula_label.text = formula_text
+            
+            update_hist(formula_text)
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return formula_history.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: TableViewButton = tableView.dequeueReusableCell(withIdentifier: "history", for: indexPath) as! TableViewButton
+//        cell.textLabel!.text = formula_history[indexPath.row]
+        cell.hist_button.setTitle(formula_history[indexPath.row], for: UIControl.State.normal)
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            formula_history.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+        userDefaults.set(formula_history, forKey: "formula_history")
+    }
+    
+    @IBAction func read_formula(_ sender: UIButton) {
+        guard let formula = sender.titleLabel?.text else {
+            return
         }
         
+        formula_label.text = formula
     }
     
 }
